@@ -13,6 +13,7 @@ Public Class Serveur
     Private sockReception As Socket
     Private epRecepteur As IPEndPoint
     Private messageBytes As Byte()
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         NotifyIcon.Icon = Me.Icon
         CheckForIllegalCrossThreadCalls = False
@@ -68,6 +69,23 @@ Public Class Serveur
         sockEmission.Close()
     End Sub
 
+    Private Sub envoyerBroadcastListPseudo()
+        Dim messageBroadcast As Byte()
+        Dim sockEmission As New Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp)
+        sockEmission.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, True)
+        Dim epEmetteur As New IPEndPoint(adrIpLocale, 0)
+        sockEmission.Bind(epEmetteur)
+        Dim epRecepteur As New IPEndPoint(IPAddress.Broadcast, portClient)
+        Dim value As New List(Of String)
+        For Each item In lb_clients.Items
+            value.Add(item.ToString)
+        Next
+        Dim strMessage As String = "L" & "#" & String.Join("/", value.ToArray)
+        messageBroadcast = Encoding.Unicode.GetBytes(strMessage)
+        sockEmission.SendTo(messageBroadcast, epRecepteur)
+        sockEmission.Close()
+    End Sub
+
     Private Sub recevoir(AR As IAsyncResult)
         Dim epTemp As EndPoint = DirectCast(New IPEndPoint(IPAddress.Any, 0), EndPoint)
         sockReception.EndReceiveFrom(AR, epTemp)
@@ -80,6 +98,7 @@ Public Class Serveur
             Case "C"
                 lb_clients.Items.Add(tabElements(1))
                 envoyerBroadcastInfo(tabElements(1) & " s'est connecté")
+                envoyerBroadcastListPseudo()
                 Exit Select
             Case "E"
                 envoyerBroadcast(tabElements(1), tabElements(2))
@@ -87,6 +106,7 @@ Public Class Serveur
             Case "D"
                 lb_clients.Items.Remove(tabElements(1))
                 envoyerBroadcastInfo(tabElements(1) & " s'est déconnecté")
+                envoyerBroadcastListPseudo()
                 Exit Select
         End Select
         Array.Clear(messageBytes, 0, messageBytes.Length)

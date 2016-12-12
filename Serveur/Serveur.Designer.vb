@@ -26,11 +26,11 @@ Partial Class Serveur
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Serveur))
         Me.lb_clients = New System.Windows.Forms.ListBox()
         Me.NotifyIcon = New System.Windows.Forms.NotifyIcon(Me.components)
-        Me.ContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AfficherToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.QuitterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ContextMenuStrip.SuspendLayout()
+        Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'lb_clients
@@ -43,14 +43,14 @@ Partial Class Serveur
         '
         'NotifyIcon
         '
-        Me.NotifyIcon.ContextMenuStrip = Me.ContextMenuStrip
+        Me.NotifyIcon.ContextMenuStrip = Me.ContextMenuStrip1
         Me.NotifyIcon.Text = "serveur messagerie"
         '
-        'ContextMenuStrip
+        'ContextMenuStrip1
         '
-        Me.ContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfficherToolStripMenuItem, Me.ToolStripSeparator1, Me.QuitterToolStripMenuItem})
-        Me.ContextMenuStrip.Name = "ContextMenuStrip"
-        Me.ContextMenuStrip.Size = New System.Drawing.Size(159, 76)
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfficherToolStripMenuItem, Me.ToolStripSeparator1, Me.QuitterToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(159, 76)
         '
         'AfficherToolStripMenuItem
         '
@@ -73,26 +73,26 @@ Partial Class Serveur
         Me.QuitterToolStripMenuItem.Size = New System.Drawing.Size(158, 22)
         Me.QuitterToolStripMenuItem.Text = "Quitter"
         '
-        'Form1
+        'Serveur
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 262)
+        Me.ClientSize = New System.Drawing.Size(284, 261)
         Me.Controls.Add(Me.lb_clients)
         Me.MaximizeBox = False
         Me.MaximumSize = New System.Drawing.Size(300, 300)
         Me.MinimumSize = New System.Drawing.Size(300, 300)
-        Me.Name = "Form1"
+        Me.Name = "Serveur"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Serveur"
-        Me.ContextMenuStrip.ResumeLayout(False)
+        Me.ContextMenuStrip1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
 
     Friend WithEvents lb_clients As ListBox
     Friend WithEvents NotifyIcon As NotifyIcon
-    Friend WithEvents ContextMenuStrip As ContextMenuStrip
+    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
     Friend WithEvents AfficherToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents QuitterToolStripMenuItem As ToolStripMenuItem

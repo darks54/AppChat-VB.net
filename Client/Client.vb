@@ -9,7 +9,7 @@ Public Class Client
     Dim Client As TcpClient
     Private adrIpLocale As IPAddress
     Private separateur As String
-    Private ipServeur As IPAddress = IPAddress.Parse("172.16.1.128")
+    Private ipServeur As IPAddress
     Private portServeur As Integer = 33000
     Private portClient As Integer = 33001
     Private lgMessage As Integer = 1000
@@ -22,18 +22,29 @@ Public Class Client
         CheckForIllegalCrossThreadCalls = False
         adrIpLocale = getAdrIpLocalV4()
         separateur = "#"
+        If My.Settings.Pseudo = "" And My.Settings.Server = "" Then
+            Dim options As New Options
+            If options.ShowDialog() = DialogResult.Cancel Then
+                End
+            End If
+        End If
+
+        ipServeur = IPAddress.Parse(My.Settings.Server)
+        initReception()
+        envoyer("C", "")
+        tb_message.Focus()
     End Sub
 
-    Private Sub bt_connecter_Click(sender As Object, e As EventArgs) Handles bt_connecter.Click
-        If Not tb_pseudo.Text = "" Then
-            bt_connecter.Enabled = False
-            tb_pseudo.Enabled = False
-            envoyer("C", "")
-            bt_envoyer.Enabled = True
-            tb_message.Enabled = True
-            initReception()
-            tb_message.Focus()
-        End If
+    Private Sub bt_connecter_Click(sender As Object, e As EventArgs)
+        'If Not tb_pseudo.Text = "" Then
+        '    bt_connecter.Enabled = False
+        '    tb_pseudo.Enabled = False
+        '    envoyer("C", "")
+        '    bt_envoyer.Enabled = True
+        '    tb_message.Enabled = True
+        '    initReception()
+        '    tb_message.Focus()
+        'End If
     End Sub
 
     Private Sub bt_envoyer_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bt_envoyer.Click
@@ -62,7 +73,7 @@ Public Class Client
         Dim epEmetteur As IPEndPoint = New IPEndPoint(adrIpLocale, 0)
         sock.Bind(epEmetteur)
         Dim epRecepteur As IPEndPoint = New IPEndPoint(ipServeur, portServeur)
-        Dim infos As String = typeMessage & "#" & tb_pseudo.Text & "#" & texte & "#"
+        Dim infos As String = typeMessage & "#" & My.Settings.Pseudo & "#" & texte & "#"
 
         messageBytes = Encoding.Unicode.GetBytes(infos)
         sock.SendTo(messageBytes, epRecepteur)
@@ -95,6 +106,13 @@ Public Class Client
             Case "I"
                 lb_messages.Items.Add(tabElements(1))
                 FlashIcon(MyBase.Handle, FLASHW_TRAY + FLASHW_TIMERNOFG)
+                Exit Select
+            Case "L"
+                lb_pseudo.Items.Clear()
+                For Each item In tabElements(2).Split("/"c)
+                    lb_pseudo.Items.Add(item)
+                Next
+                'FlashIcon(MyBase.Handle, FLASHW_TRAY + FLASHW_TIMERNOFG)
                 Exit Select
         End Select
         Array.Clear(messageBytes, 0, messageBytes.Length)
