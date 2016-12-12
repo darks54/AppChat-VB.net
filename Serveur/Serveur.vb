@@ -13,6 +13,8 @@ Public Class Serveur
     Private sockReception As Socket
     Private epRecepteur As IPEndPoint
     Private messageBytes As Byte()
+    Private users As New List(Of User)
+    Private salons As New List(Of Salon)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         NotifyIcon.Icon = Me.Icon
@@ -69,7 +71,7 @@ Public Class Serveur
         sockEmission.Close()
     End Sub
 
-    Private Sub envoyerBroadcastListPseudo()
+    Private Sub envoyerBroadcastUsers()
         Dim messageBroadcast As Byte()
         Dim sockEmission As New Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp)
         sockEmission.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, True)
@@ -77,8 +79,8 @@ Public Class Serveur
         sockEmission.Bind(epEmetteur)
         Dim epRecepteur As New IPEndPoint(IPAddress.Broadcast, portClient)
         Dim value As New List(Of String)
-        For Each item In lb_clients.Items
-            value.Add(item.ToString)
+        For Each item In users
+            value.Add(item.Pseudo & "," & item.Id)
         Next
         Dim strMessage As String = "L" & "#" & String.Join("/", value.ToArray)
         messageBroadcast = Encoding.Unicode.GetBytes(strMessage)
@@ -92,26 +94,34 @@ Public Class Serveur
 
         Dim strMessage As String = Encoding.Unicode.GetString(messageBytes, 0, messageBytes.Length)
         Dim tabElements As String()
-        tabElements = strMessage.Split(separateur)
+        tabElements = strMessage.Replace(vbNullChar, "").Split(separateur, StringSplitOptions.RemoveEmptyEntries)
         Console.WriteLine(tabElements(0))
         Select Case tabElements(0)
             Case "C"
+                Dim user As New User(tabElements(1), tabElements(2), IPAddress.Parse(tabElements(3)))
+                users.Add(user)
                 lb_clients.Items.Add(tabElements(1))
-                envoyerBroadcastInfo(tabElements(1) & " s'est connecté")
-                envoyerBroadcastListPseudo()
+                envoyerBroadcastUsers()
                 Exit Select
             Case "E"
                 envoyerBroadcast(tabElements(1), tabElements(2))
                 Exit Select
             Case "D"
+                users.Remove(users.Find(Function(c) c.Id = tabElements(2)))
                 lb_clients.Items.Remove(tabElements(1))
-                envoyerBroadcastInfo(tabElements(1) & " s'est déconnecté")
-                envoyerBroadcastListPseudo()
+                envoyerBroadcastUsers()
+                Exit Select
+            Case "S"
+                Dim salon As New Salon(tabElements(2))
+                salon.Users.Add(users.Find(Function(c) c.Id = tabElements(3)))
+                salon.Users.Add(users.Find(Function(c) c.Id = tabElements(4)))
+                salons.Add(salon)
+                lb_clients.Items.Remove(tabElements(1))
+                envoyerBroadcastUsers()
                 Exit Select
         End Select
         Array.Clear(messageBytes, 0, messageBytes.Length)
-        sockReception.BeginReceiveFrom(messageBytes, 0, lgMessage, SocketFlags.None, epTemp, New AsyncCallback(AddressOf recevoir),
-        Nothing)
+        sockReception.BeginReceiveFrom(messageBytes, 0, lgMessage, SocketFlags.None, epTemp, New AsyncCallback(AddressOf recevoir), Nothing)
     End Sub
 
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize

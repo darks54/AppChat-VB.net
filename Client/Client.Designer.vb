@@ -22,23 +22,28 @@ Partial Class Client
     'Ne la modifiez pas à l'aide de l'éditeur de code.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Client))
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.lb_pseudo = New System.Windows.Forms.ListBox()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.lb_messages = New System.Windows.Forms.ListBox()
+        Me.bt_envoyer = New System.Windows.Forms.Button()
+        Me.tb_message = New System.Windows.Forms.TextBox()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.tb_message = New System.Windows.Forms.TextBox()
-        Me.bt_envoyer = New System.Windows.Forms.Button()
-        Me.lb_messages = New System.Windows.Forms.ListBox()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ToolStripTextBox1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.InviterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
-        Me.ToolStrip1.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
+        Me.TabPage1.SuspendLayout()
+        Me.ToolStrip1.SuspendLayout()
+        Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'SplitContainer1
@@ -66,11 +71,67 @@ Partial Class Client
         Me.lb_pseudo.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_pseudo.ContextMenuStrip = Me.ContextMenuStrip1
         Me.lb_pseudo.FormattingEnabled = True
         Me.lb_pseudo.Location = New System.Drawing.Point(3, 4)
         Me.lb_pseudo.Name = "lb_pseudo"
         Me.lb_pseudo.Size = New System.Drawing.Size(178, 602)
         Me.lb_pseudo.TabIndex = 0
+        '
+        'TabControl1
+        '
+        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Location = New System.Drawing.Point(3, 4)
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(823, 603)
+        Me.TabControl1.TabIndex = 8
+        '
+        'TabPage1
+        '
+        Me.TabPage1.Controls.Add(Me.lb_messages)
+        Me.TabPage1.Controls.Add(Me.bt_envoyer)
+        Me.TabPage1.Controls.Add(Me.tb_message)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Size = New System.Drawing.Size(815, 577)
+        Me.TabPage1.TabIndex = 0
+        Me.TabPage1.Text = "TabPage1"
+        Me.TabPage1.UseVisualStyleBackColor = True
+        '
+        'lb_messages
+        '
+        Me.lb_messages.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_messages.FormattingEnabled = True
+        Me.lb_messages.Location = New System.Drawing.Point(6, 6)
+        Me.lb_messages.Name = "lb_messages"
+        Me.lb_messages.Size = New System.Drawing.Size(803, 537)
+        Me.lb_messages.TabIndex = 7
+        '
+        'bt_envoyer
+        '
+        Me.bt_envoyer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_envoyer.Location = New System.Drawing.Point(732, 551)
+        Me.bt_envoyer.Name = "bt_envoyer"
+        Me.bt_envoyer.Size = New System.Drawing.Size(77, 20)
+        Me.bt_envoyer.TabIndex = 2
+        Me.bt_envoyer.Text = "Envoyer"
+        Me.bt_envoyer.UseVisualStyleBackColor = True
+        '
+        'tb_message
+        '
+        Me.tb_message.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tb_message.Location = New System.Drawing.Point(6, 551)
+        Me.tb_message.Name = "tb_message"
+        Me.tb_message.Size = New System.Drawing.Size(720, 20)
+        Me.tb_message.TabIndex = 0
         '
         'ToolStrip1
         '
@@ -99,60 +160,23 @@ Partial Class Client
         Me.ToolStripButton2.Size = New System.Drawing.Size(53, 22)
         Me.ToolStripButton2.Text = "Options"
         '
-        'TabPage1
+        'ContextMenuStrip1
         '
-        Me.TabPage1.Controls.Add(Me.lb_messages)
-        Me.TabPage1.Controls.Add(Me.bt_envoyer)
-        Me.TabPage1.Controls.Add(Me.tb_message)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(815, 577)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "TabPage1"
-        Me.TabPage1.UseVisualStyleBackColor = True
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripTextBox1, Me.InviterToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(131, 48)
         '
-        'tb_message
+        'ToolStripTextBox1
         '
-        Me.tb_message.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tb_message.Location = New System.Drawing.Point(6, 551)
-        Me.tb_message.Name = "tb_message"
-        Me.tb_message.Size = New System.Drawing.Size(720, 20)
-        Me.tb_message.TabIndex = 0
+        Me.ToolStripTextBox1.Name = "ToolStripTextBox1"
+        Me.ToolStripTextBox1.Size = New System.Drawing.Size(152, 22)
+        Me.ToolStripTextBox1.Text = "Chuchoter"
         '
-        'bt_envoyer
+        'InviterToolStripMenuItem
         '
-        Me.bt_envoyer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_envoyer.Location = New System.Drawing.Point(732, 551)
-        Me.bt_envoyer.Name = "bt_envoyer"
-        Me.bt_envoyer.Size = New System.Drawing.Size(77, 20)
-        Me.bt_envoyer.TabIndex = 2
-        Me.bt_envoyer.Text = "Envoyer"
-        Me.bt_envoyer.UseVisualStyleBackColor = True
-        '
-        'lb_messages
-        '
-        Me.lb_messages.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lb_messages.FormattingEnabled = True
-        Me.lb_messages.Location = New System.Drawing.Point(6, 6)
-        Me.lb_messages.Name = "lb_messages"
-        Me.lb_messages.Size = New System.Drawing.Size(803, 537)
-        Me.lb_messages.TabIndex = 7
-        '
-        'TabControl1
-        '
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Location = New System.Drawing.Point(3, 4)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(823, 603)
-        Me.TabControl1.TabIndex = 8
+        Me.InviterToolStripMenuItem.Name = "InviterToolStripMenuItem"
+        Me.InviterToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.InviterToolStripMenuItem.Text = "Inviter"
         '
         'Client
         '
@@ -166,11 +190,12 @@ Partial Class Client
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         Me.SplitContainer1.ResumeLayout(False)
-        Me.ToolStrip1.ResumeLayout(False)
-        Me.ToolStrip1.PerformLayout()
+        Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.TabPage1.PerformLayout()
-        Me.TabControl1.ResumeLayout(False)
+        Me.ToolStrip1.ResumeLayout(False)
+        Me.ToolStrip1.PerformLayout()
+        Me.ContextMenuStrip1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -185,4 +210,7 @@ Partial Class Client
     Friend WithEvents lb_messages As ListBox
     Friend WithEvents bt_envoyer As Button
     Friend WithEvents tb_message As TextBox
+    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents ToolStripTextBox1 As ToolStripMenuItem
+    Friend WithEvents InviterToolStripMenuItem As ToolStripMenuItem
 End Class

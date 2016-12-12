@@ -99,6 +99,8 @@
     <Compile Include="Options.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Salon.vb" />
+    <Compile Include="User.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Client.resx">
