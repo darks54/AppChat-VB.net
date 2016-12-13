@@ -1,7 +1,7 @@
 ﻿Public Class Salon
     Private _nom As String
     Private _id As String
-    Private _users As List(Of User)
+    Private _users As New List(Of User)
 
     Public Property Nom As String
         Get

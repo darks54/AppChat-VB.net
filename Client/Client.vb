@@ -6,24 +6,25 @@ Imports System.Runtime.InteropServices
 
 Public Class Client
 
-    Dim Client As TcpClient
+    'Dim Client As TcpClient
     Private adrIpLocale As IPAddress
-    Private separateur As String
     Private ipServeur As IPAddress
     Private portServeur As Integer = 33000
     Private portClient As Integer = 33001
     Private lgMessage As Integer = 1000
     Private sockReception As Socket
     Private epRecepteur As IPEndPoint
+    Dim messageBytes() As Byte
+    Dim deco As Boolean = False
+
     Private id As String
     Private users As New List(Of User)
     Private salons As New List(Of Salon)
-    Dim messageBytes() As Byte
+    Private idCurrentSalon As String = ""
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckForIllegalCrossThreadCalls = False
         adrIpLocale = getAdrIpLocalV4()
-        separateur = "#"
         If My.Settings.Pseudo = "" And My.Settings.Server = "" Then
             Dim options As New Options
             If options.ShowDialog() = DialogResult.Cancel Then
@@ -35,7 +36,7 @@ Public Class Client
     End Sub
 
     Private Sub bt_envoyer_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bt_envoyer.Click
-        envoyer("E", tb_message.Text)
+        envoyerMessage(tb_message.Text, tb_message.Text)
     End Sub
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -55,57 +56,35 @@ Public Class Client
     End Function
 
     Private Sub connexion()
-        Dim messageBytes() As Byte
-        Dim sock As Socket = New Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp)
-        Dim epEmetteur As IPEndPoint = New IPEndPoint(adrIpLocale, 0)
-        sock.Bind(epEmetteur)
-        Dim epRecepteur As IPEndPoint = New IPEndPoint(ipServeur, portServeur)
-        Dim infos As String = "C#" & My.Settings.Pseudo & "#" & id & "#" & adrIpLocale.ToString
-        messageBytes = Encoding.Unicode.GetBytes(infos)
-        sock.SendTo(messageBytes, epRecepteur)
-        sock.Close()
-        tb_message.Clear()
-        tb_message.Focus()
+        envoyer("C#" & My.Settings.Pseudo & "#" & id & "#" & adrIpLocale.ToString)
     End Sub
 
     Private Sub deconnexion()
-        Dim messageBytes() As Byte
-        Dim sock As Socket = New Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp)
-        Dim epEmetteur As IPEndPoint = New IPEndPoint(adrIpLocale, 0)
-        sock.Bind(epEmetteur)
-        Dim epRecepteur As IPEndPoint = New IPEndPoint(ipServeur, portServeur)
-        Dim infos As String = "D#" & My.Settings.Pseudo & "#" & id
-        messageBytes = Encoding.Unicode.GetBytes(infos)
-        sock.SendTo(messageBytes, epRecepteur)
-        sock.Close()
+        deco = True
+        envoyer("D#" & My.Settings.Pseudo & "#" & id)
     End Sub
 
-    Private Sub envoyer(ByVal typeMessage As String, texte As String)
+    Private Sub envoyerMessage(ByVal texte As String, ByVal idSalon As String)
+        envoyer("E#" & My.Settings.Pseudo & "#" & idSalon & "#" & texte)
+    End Sub
+
+    Private Sub creerSalon(ByVal idInvite As String)
+        Dim idSalon = Guid.NewGuid().ToString
+        envoyer("S#" & My.Settings.Pseudo & "#" & idSalon & "#" & id & "#" & idInvite)
+        idCurrentSalon = idSalon
+    End Sub
+
+    Private Sub envoyer(infos As String)
         Dim messageBytes() As Byte
         Dim sock As Socket = New Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp)
         Dim epEmetteur As IPEndPoint = New IPEndPoint(adrIpLocale, 0)
         sock.Bind(epEmetteur)
         Dim epRecepteur As IPEndPoint = New IPEndPoint(ipServeur, portServeur)
-        Dim infos As String = typeMessage & "#" & My.Settings.Pseudo & "#" & texte
         messageBytes = Encoding.Unicode.GetBytes(infos)
         sock.SendTo(messageBytes, epRecepteur)
         sock.Close()
         tb_message.Clear()
         tb_message.Focus()
-    End Sub
-
-    Private Sub creerSalon(ByVal idInvite As String)
-        Dim messageBytes() As Byte
-        Dim sock As Socket = New Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp)
-        Dim epEmetteur As IPEndPoint = New IPEndPoint(adrIpLocale, 0)
-        sock.Bind(epEmetteur)
-        Dim epRecepteur As IPEndPoint = New IPEndPoint(ipServeur, portServeur)
-
-        Dim idSalon = Guid.NewGuid().ToString
-        Dim infos As String = "S#" & My.Settings.Pseudo & "#" & idSalon & "#" & id & "#" & idInvite
-        messageBytes = Encoding.Unicode.GetBytes(infos)
-        sock.SendTo(messageBytes, epRecepteur)
-        sock.Close()
     End Sub
 
     Private Sub initReception()
@@ -137,12 +116,7 @@ Public Class Client
                 lb_messages.Items.Add(tabElements(1) + " -> " + tabElements(2))
                 FlashIcon(MyBase.Handle, FLASHW_TRAY + FLASHW_TIMERNOFG)
                 Exit Select
-            'Case "I"
-            '    lb_messages.Items.Add(tabElements(1))
-            '    FlashIcon(MyBase.Handle, FLASHW_TRAY + FLASHW_TIMERNOFG)
-            '    Exit Select
             Case "L"
-                'lb_pseudo.Items.Clear()
                 users.Clear()
                 For Each item In tabElements(1).Split({"/"c}, StringSplitOptions.RemoveEmptyEntries)
                     If Not item.Split(",")(1) = id Then
@@ -150,14 +124,44 @@ Public Class Client
                         users.Add(user)
                     End If
                 Next
-                lb_pseudo.DataSource = users
-                lb_pseudo.ValueMember = "Id"
-                lb_pseudo.DisplayMember = "Pseudo"
+                If Not deco Then
+                    ajoutPseudo()
+                End If
+
                 'FlashIcon(MyBase.Handle, FLASHW_TRAY + FLASHW_TIMERNOFG)
                 Exit Select
         End Select
         Array.Clear(messageBytes, 0, messageBytes.Length)
         sockReception.BeginReceiveFrom(messageBytes, 0, lgMessage, SocketFlags.None, epTemp, New AsyncCallback(AddressOf recevoir), Nothing)
+    End Sub
+
+    Public Delegate Sub MaMethodeCallBack()
+    Public Sub ajoutPseudo()
+
+        If Me.InvokeRequired Then
+            Me.Invoke(New MaMethodeCallBack(AddressOf ajoutPseudo))
+        Else
+            flp_pseudo.Controls.Clear()
+            For Each item In users
+                Dim label As New Label
+                label.Text = item.Pseudo
+                label.Name = item.Id
+                label.AutoSize = True
+                AddHandler label.MouseEnter, AddressOf pseudo_MouseEnter
+                label.ContextMenuStrip = ContextMenuStrip1
+                flp_pseudo.Controls.Add(label)
+            Next
+        End If
+    End Sub
+
+    Public Sub pseudo_MouseEnter(ByVal sender As Label, ByVal e As System.EventArgs)
+        For Each item In flp_pseudo.Controls
+            Dim label = CType(item, Label)
+            label.BackColor = SystemColors.Control
+            sender.ForeColor = SystemColors.ControlText
+        Next
+        sender.BackColor = SystemColors.Highlight
+        sender.ForeColor = SystemColors.HighlightText
     End Sub
 
     Private Sub Init()
@@ -200,12 +204,9 @@ Public Class Client
 
     End Sub
 
-    Private Sub lb_pseudo_MouseClick(sender As Object, e As MouseEventArgs) Handles lb_pseudo.MouseClick
-        If lb_pseudo.SelectedItem.ToString = id Then
-            ContextMenuStrip1.Visible = False
-        Else
-            ContextMenuStrip1.Visible = True
-        End If
+    Private Sub ChuchoterToolStripTextBox_Click(sender As Object, e As EventArgs) Handles ChuchoterToolStripTextBox.Click
+        Dim label = CType(CType(CType(sender, ToolStripMenuItem).Owner, ContextMenuStrip).SourceControl, Label)
+        creerSalon(label.Name)
     End Sub
 End Class
 
