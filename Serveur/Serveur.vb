@@ -119,6 +119,12 @@ Public Class Serveur
                 lb_clients.Items.Remove(tabElements(1))
                 envoyerBroadcastUsers()
                 Exit Select
+            Case "Q"
+                Dim salon = salons.Find(Function(c) c.Id = tabElements(2))
+                salon.Users.Remove(salon.Users.Find(Function(c) c.Id = tabElements(3)))
+
+                'envoyerBroadcastUsers()
+                Exit Select
         End Select
         Array.Clear(messageBytes, 0, messageBytes.Length)
         sockReception.BeginReceiveFrom(messageBytes, 0, lgMessage, SocketFlags.None, epTemp, New AsyncCallback(AddressOf recevoir), Nothing)

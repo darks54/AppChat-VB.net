@@ -15,8 +15,7 @@ Public Class Client
     Private sockReception As Socket
     Private epRecepteur As IPEndPoint
     Dim messageBytes() As Byte
-    Dim deco As Boolean = False
-
+    Private deco As Boolean = False
     Private id As String
     Private users As New List(Of User)
     Private salons As New List(Of Salon)
@@ -25,6 +24,15 @@ Public Class Client
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckForIllegalCrossThreadCalls = False
         adrIpLocale = getAdrIpLocalV4()
+
+        MyBase.BackColor = ColorTranslator.FromHtml("#2d2d30")
+        flp_pseudo.BackColor = ColorTranslator.FromHtml("#1e1e1e")
+        lb_messages.BackColor = ColorTranslator.FromHtml("#1e1e1e")
+        tb_message.BackColor = ColorTranslator.FromHtml("#1e1e1e")
+        bt_envoyer.BackColor = ColorTranslator.FromHtml("#1e1e1e")
+        TabPageGeneral.BackColor = ColorTranslator.FromHtml("#2d2d30")
+        SplitContainer1.Panel2.BackColor = ColorTranslator.FromHtml("#2d2d30")
+
         If My.Settings.Pseudo = "" And My.Settings.Server = "" Then
             Dim options As New Options
             If options.ShowDialog() = DialogResult.Cancel Then
@@ -32,7 +40,6 @@ Public Class Client
             End If
         End If
         Init()
-
     End Sub
 
     Private Sub bt_envoyer_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles bt_envoyer.Click
@@ -52,7 +59,6 @@ Public Class Client
             End If
         Next
         Return Nothing
-
     End Function
 
     Private Sub connexion()
@@ -68,10 +74,14 @@ Public Class Client
         envoyer("E#" & My.Settings.Pseudo & "#" & idSalon & "#" & texte)
     End Sub
 
-    Private Sub creerSalon(ByVal idInvite As String)
-        Dim idSalon = Guid.NewGuid().ToString
+    Private Sub creerSalon(ByVal idInvite As String, ByVal idSalon As String)
         envoyer("S#" & My.Settings.Pseudo & "#" & idSalon & "#" & id & "#" & idInvite)
         idCurrentSalon = idSalon
+    End Sub
+
+    Private Sub quitterSalon(ByVal idSalon As String)
+        envoyer("Q#" & My.Settings.Pseudo & "#" & idSalon & "#" & id)
+        idCurrentSalon = ""
     End Sub
 
     Private Sub envoyer(infos As String)
@@ -125,7 +135,7 @@ Public Class Client
                     End If
                 Next
                 If Not deco Then
-                    ajoutPseudo()
+                    updateUsers()
                 End If
 
                 'FlashIcon(MyBase.Handle, FLASHW_TRAY + FLASHW_TIMERNOFG)
@@ -136,10 +146,9 @@ Public Class Client
     End Sub
 
     Public Delegate Sub MaMethodeCallBack()
-    Public Sub ajoutPseudo()
-
+    Public Sub updateUsers()
         If Me.InvokeRequired Then
-            Me.Invoke(New MaMethodeCallBack(AddressOf ajoutPseudo))
+            Me.Invoke(New MaMethodeCallBack(AddressOf updateUsers))
         Else
             flp_pseudo.Controls.Clear()
             For Each item In users
@@ -148,7 +157,7 @@ Public Class Client
                 label.Name = item.Id
                 label.AutoSize = True
                 AddHandler label.MouseEnter, AddressOf pseudo_MouseEnter
-                label.ContextMenuStrip = ContextMenuStrip1
+                label.ContextMenuStrip = ContextMenuStripUsers
                 flp_pseudo.Controls.Add(label)
             Next
         End If
@@ -157,8 +166,8 @@ Public Class Client
     Public Sub pseudo_MouseEnter(ByVal sender As Label, ByVal e As System.EventArgs)
         For Each item In flp_pseudo.Controls
             Dim label = CType(item, Label)
-            label.BackColor = SystemColors.Control
-            sender.ForeColor = SystemColors.ControlText
+            label.BackColor = Color.White
+            label.ForeColor = SystemColors.ControlText
         Next
         sender.BackColor = SystemColors.Highlight
         sender.ForeColor = SystemColors.HighlightText
@@ -170,6 +179,46 @@ Public Class Client
         id = Guid.NewGuid().ToString
         connexion()
         tb_message.Focus()
+    End Sub
+
+    Private Sub InviterToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InviterToolStripMenuItem.Click
+
+    End Sub
+
+    Private Sub ChuchoterToolStripTextBox_Click(sender As Object, e As EventArgs) Handles ChuchoterToolStripTextBox.Click
+        Dim label = CType(CType(CType(sender, ToolStripMenuItem).Owner, ContextMenuStrip).SourceControl, Label)
+        Dim idSalon = Guid.NewGuid().ToString
+        creerSalon(label.Name, idSalon)
+        Dim tabPage As New TabPage
+        tabPage.Name = idSalon
+        tabPage.Text = label.Text
+        Dim lbMessage As New ListBox
+        lbMessage.Location = New Point(6, 6)
+        lbMessage.Size = New Size(tabPage.Size.Width - 12, tabPage.Size.Height - 40)
+        lbMessage.Anchor = AnchorStyles.Top Or AnchorStyles.Right Or AnchorStyles.Bottom Or AnchorStyles.Left
+        Dim tbMessage As New TextBox
+        tbMessage.Location = New Point(6, tabPage.Size.Height - 26)
+        tbMessage.Size = New Size(tabPage.Size.Width - 95, 20)
+        tbMessage.Anchor = AnchorStyles.Right Or AnchorStyles.Bottom Or AnchorStyles.Left
+        Dim btnMessage As New Button
+        btnMessage.Location = New Point(tabPage.Size.Width - 83, tabPage.Size.Height - 26)
+        btnMessage.Size = New Size(77, 20)
+        btnMessage.Text = "Envoyer"
+        btnMessage.Anchor = AnchorStyles.Right Or AnchorStyles.Bottom
+
+        tabPage.Controls.Add(lbMessage)
+        tabPage.Controls.Add(tbMessage)
+        tabPage.Controls.Add(btnMessage)
+        tabPage.ContextMenuStrip = ContextMenuStripSalons
+
+        TabControlSalons.TabPages.Add(tabPage)
+        TabControlSalons.SelectedTab = tabPage
+    End Sub
+
+    Private Sub FermerToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FermerToolStripMenuItem.Click
+        Dim tabPage = CType(CType(CType(sender, ToolStripMenuItem).Owner, ContextMenuStrip).SourceControl, TabPage)
+        TabControlSalons.TabPages.Remove(tabPage)
+        quitterSalon(tabPage.Name)
     End Sub
 
     Public Structure FLASHWINFO
@@ -200,13 +249,22 @@ Public Class Client
         FlashWindowEx(flash) '/// flash the window 
     End Sub
 
-    Private Sub InviterToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InviterToolStripMenuItem.Click
-
+    Private Sub btn_options_Click(sender As Object, e As EventArgs) Handles btn_options.Click
+        Dim optionForm As New Options
+        optionForm.ShowDialog()
     End Sub
 
-    Private Sub ChuchoterToolStripTextBox_Click(sender As Object, e As EventArgs) Handles ChuchoterToolStripTextBox.Click
-        Dim label = CType(CType(CType(sender, ToolStripMenuItem).Owner, ContextMenuStrip).SourceControl, Label)
-        creerSalon(label.Name)
+    Private Sub TabControlSalons_DrawItem(sender As Object, e As DrawItemEventArgs) Handles TabControlSalons.DrawItem
+        If e.Index = TabControlSalons.SelectedIndex Then
+            e.Graphics.FillRectangle(New SolidBrush(SystemColors.Highlight), e.Bounds)
+        Else
+            e.Graphics.FillRectangle(New SolidBrush(ColorTranslator.FromHtml("#2d2d30")), e.Bounds)
+        End If
+
+        Dim paddedBounds As Rectangle = e.Bounds
+        paddedBounds.Inflate(-2, -2)
+        e.Graphics.DrawString(TabControlSalons.TabPages(e.Index).Text, Me.Font, SystemBrushes.HighlightText, paddedBounds)
+
     End Sub
 End Class
 

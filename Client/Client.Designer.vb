@@ -26,24 +26,27 @@ Partial Class Client
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Client))
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.flp_pseudo = New System.Windows.Forms.FlowLayoutPanel()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.TabControlSalons = New System.Windows.Forms.TabControl()
+        Me.TabPageGeneral = New System.Windows.Forms.TabPage()
         Me.lb_messages = New System.Windows.Forms.ListBox()
         Me.bt_envoyer = New System.Windows.Forms.Button()
         Me.tb_message = New System.Windows.Forms.TextBox()
-        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ContextMenuStripUsers = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ChuchoterToolStripTextBox = New System.Windows.Forms.ToolStripMenuItem()
         Me.InviterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
+        Me.btn_options = New System.Windows.Forms.ToolStripButton()
+        Me.ContextMenuStripSalons = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.FermerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
-        Me.TabControl1.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
-        Me.ContextMenuStrip1.SuspendLayout()
+        Me.TabControlSalons.SuspendLayout()
+        Me.TabPageGeneral.SuspendLayout()
+        Me.ContextMenuStripUsers.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
+        Me.ContextMenuStripSalons.SuspendLayout()
         Me.SuspendLayout()
         '
         'SplitContainer1
@@ -51,8 +54,7 @@ Partial Class Client
         Me.SplitContainer1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 25)
-        Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(0)
+        Me.SplitContainer1.Location = New System.Drawing.Point(12, 28)
         Me.SplitContainer1.Name = "SplitContainer1"
         '
         'SplitContainer1.Panel1
@@ -61,9 +63,9 @@ Partial Class Client
         '
         'SplitContainer1.Panel2
         '
-        Me.SplitContainer1.Panel2.Controls.Add(Me.TabControl1)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1014, 610)
-        Me.SplitContainer1.SplitterDistance = 184
+        Me.SplitContainer1.Panel2.Controls.Add(Me.TabControlSalons)
+        Me.SplitContainer1.Size = New System.Drawing.Size(991, 598)
+        Me.SplitContainer1.SplitterDistance = 179
         Me.SplitContainer1.TabIndex = 8
         '
         'flp_pseudo
@@ -71,36 +73,37 @@ Partial Class Client
         Me.flp_pseudo.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.flp_pseudo.BackColor = System.Drawing.Color.White
         Me.flp_pseudo.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
         Me.flp_pseudo.Location = New System.Drawing.Point(3, 4)
         Me.flp_pseudo.Name = "flp_pseudo"
-        Me.flp_pseudo.Size = New System.Drawing.Size(178, 603)
+        Me.flp_pseudo.Size = New System.Drawing.Size(173, 591)
         Me.flp_pseudo.TabIndex = 0
         '
-        'TabControl1
+        'TabControlSalons
         '
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.TabControlSalons.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Location = New System.Drawing.Point(3, 4)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(823, 603)
-        Me.TabControl1.TabIndex = 8
+        Me.TabControlSalons.Controls.Add(Me.TabPageGeneral)
+        Me.TabControlSalons.Location = New System.Drawing.Point(3, 4)
+        Me.TabControlSalons.Name = "TabControlSalons"
+        Me.TabControlSalons.SelectedIndex = 0
+        Me.TabControlSalons.Size = New System.Drawing.Size(802, 591)
+        Me.TabControlSalons.TabIndex = 8
         '
-        'TabPage1
+        'TabPageGeneral
         '
-        Me.TabPage1.Controls.Add(Me.lb_messages)
-        Me.TabPage1.Controls.Add(Me.bt_envoyer)
-        Me.TabPage1.Controls.Add(Me.tb_message)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(815, 577)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "TabPage1"
-        Me.TabPage1.UseVisualStyleBackColor = True
+        Me.TabPageGeneral.Controls.Add(Me.lb_messages)
+        Me.TabPageGeneral.Controls.Add(Me.bt_envoyer)
+        Me.TabPageGeneral.Controls.Add(Me.tb_message)
+        Me.TabPageGeneral.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageGeneral.Name = "TabPageGeneral"
+        Me.TabPageGeneral.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPageGeneral.Size = New System.Drawing.Size(794, 565)
+        Me.TabPageGeneral.TabIndex = 0
+        Me.TabPageGeneral.Text = "Général"
+        Me.TabPageGeneral.UseVisualStyleBackColor = True
         '
         'lb_messages
         '
@@ -110,13 +113,13 @@ Partial Class Client
         Me.lb_messages.FormattingEnabled = True
         Me.lb_messages.Location = New System.Drawing.Point(6, 6)
         Me.lb_messages.Name = "lb_messages"
-        Me.lb_messages.Size = New System.Drawing.Size(803, 537)
+        Me.lb_messages.Size = New System.Drawing.Size(782, 524)
         Me.lb_messages.TabIndex = 7
         '
         'bt_envoyer
         '
         Me.bt_envoyer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_envoyer.Location = New System.Drawing.Point(732, 551)
+        Me.bt_envoyer.Location = New System.Drawing.Point(711, 539)
         Me.bt_envoyer.Name = "bt_envoyer"
         Me.bt_envoyer.Size = New System.Drawing.Size(77, 20)
         Me.bt_envoyer.TabIndex = 2
@@ -127,16 +130,16 @@ Partial Class Client
         '
         Me.tb_message.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tb_message.Location = New System.Drawing.Point(6, 551)
+        Me.tb_message.Location = New System.Drawing.Point(6, 539)
         Me.tb_message.Name = "tb_message"
-        Me.tb_message.Size = New System.Drawing.Size(720, 20)
+        Me.tb_message.Size = New System.Drawing.Size(699, 20)
         Me.tb_message.TabIndex = 0
         '
-        'ContextMenuStrip1
+        'ContextMenuStripUsers
         '
-        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ChuchoterToolStripTextBox, Me.InviterToolStripMenuItem})
-        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(131, 48)
+        Me.ContextMenuStripUsers.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ChuchoterToolStripTextBox, Me.InviterToolStripMenuItem})
+        Me.ContextMenuStripUsers.Name = "ContextMenuStrip1"
+        Me.ContextMenuStripUsers.Size = New System.Drawing.Size(131, 48)
         '
         'ChuchoterToolStripTextBox
         '
@@ -152,7 +155,7 @@ Partial Class Client
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1, Me.ToolStripButton2})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton1, Me.btn_options})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1015, 25)
@@ -168,14 +171,26 @@ Partial Class Client
         Me.ToolStripButton1.Size = New System.Drawing.Size(48, 22)
         Me.ToolStripButton1.Text = "Quitter"
         '
-        'ToolStripButton2
+        'btn_options
         '
-        Me.ToolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripButton2.Image = CType(resources.GetObject("ToolStripButton2.Image"), System.Drawing.Image)
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(53, 22)
-        Me.ToolStripButton2.Text = "Options"
+        Me.btn_options.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.btn_options.Image = CType(resources.GetObject("btn_options.Image"), System.Drawing.Image)
+        Me.btn_options.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btn_options.Name = "btn_options"
+        Me.btn_options.Size = New System.Drawing.Size(53, 22)
+        Me.btn_options.Text = "Options"
+        '
+        'ContextMenuStripSalons
+        '
+        Me.ContextMenuStripSalons.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FermerToolStripMenuItem})
+        Me.ContextMenuStripSalons.Name = "ContextMenuStripSalons"
+        Me.ContextMenuStripSalons.Size = New System.Drawing.Size(112, 26)
+        '
+        'FermerToolStripMenuItem
+        '
+        Me.FermerToolStripMenuItem.Name = "FermerToolStripMenuItem"
+        Me.FermerToolStripMenuItem.Size = New System.Drawing.Size(111, 22)
+        Me.FermerToolStripMenuItem.Text = "Fermer"
         '
         'Client
         '
@@ -189,12 +204,13 @@ Partial Class Client
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         Me.SplitContainer1.ResumeLayout(False)
-        Me.TabControl1.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
-        Me.ContextMenuStrip1.ResumeLayout(False)
+        Me.TabControlSalons.ResumeLayout(False)
+        Me.TabPageGeneral.ResumeLayout(False)
+        Me.TabPageGeneral.PerformLayout()
+        Me.ContextMenuStripUsers.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
+        Me.ContextMenuStripSalons.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -202,14 +218,16 @@ Partial Class Client
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents ToolStrip1 As ToolStrip
     Friend WithEvents ToolStripButton1 As ToolStripButton
-    Friend WithEvents ToolStripButton2 As ToolStripButton
-    Friend WithEvents TabControl1 As TabControl
-    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents btn_options As ToolStripButton
+    Friend WithEvents TabControlSalons As TabControl
+    Friend WithEvents TabPageGeneral As TabPage
     Friend WithEvents lb_messages As ListBox
     Friend WithEvents bt_envoyer As Button
     Friend WithEvents tb_message As TextBox
-    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents ContextMenuStripUsers As ContextMenuStrip
     Friend WithEvents ChuchoterToolStripTextBox As ToolStripMenuItem
     Friend WithEvents InviterToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents flp_pseudo As FlowLayoutPanel
+    Friend WithEvents ContextMenuStripSalons As ContextMenuStrip
+    Friend WithEvents FermerToolStripMenuItem As ToolStripMenuItem
 End Class
